@@ -1,6 +1,6 @@
-function Strings( config ) {
+function Strings(config) {
 
-	const language = config.getKey( 'language' );
+	const language = config.getKey('language');
 
 	const values = {
 		fa: {
@@ -81,6 +81,7 @@ function Strings( config ) {
 			'menubar/add/mesh/torusknot': 'torusknot',
 			'menubar/add/mesh/lathe': 'Lathe',
 			'menubar/add/mesh/sprite': 'Sprite',
+			'menubar/add/mesh/pocochi': 'POCOCHI',
 
 			'menubar/add/light': 'نور',
 			'menubar/add/light/ambient': 'محیط',
@@ -532,6 +533,7 @@ function Strings( config ) {
 			'menubar/add/mesh/torusknot': 'TorusKnot',
 			'menubar/add/mesh/lathe': 'Lathe',
 			'menubar/add/mesh/sprite': 'Sprite',
+			'menubar/add/mesh/pocochi': 'POCOCHI',
 
 			'menubar/add/light': 'Light',
 			'menubar/add/light/ambient': 'Ambient',
@@ -1890,6 +1892,7 @@ function Strings( config ) {
 			'menubar/add/mesh/torusknot': 'ノットトーラス',
 			'menubar/add/mesh/lathe': '旋盤形',
 			'menubar/add/mesh/sprite': 'スプライト',
+			'menubar/add/mesh/pocochi': 'ぽこち',
 
 			'menubar/add/light': 'ライト',
 			'menubar/add/light/ambient': 'アンビエント',
@@ -2716,9 +2719,9 @@ function Strings( config ) {
 
 	return {
 
-		getKey: function ( key ) {
+		getKey: function (key) {
 
-			return values[ language ][ key ] || '???';
+			return values[language][key] || '???';
 
 		}
 
