@@ -1,14 +1,19 @@
 class View {
-    constructor(model, controller) {
-        this.model = model;
-        this.controller = controller;
+    constructor(editor, objectUuid, updateFunc = (object, model) => { }) {
+        this.editor = editor;
+        this.objectUuid = objectUuid;
+        this.updateFunc = updateFunc;
     }
 
-    update(object, model) {
-        throw new Error("This method must be overridden by subclass [View.update]");
-    }
+    update(model) {
+        const object = this.editor.objectByUuid(this.objectUuid);
 
-    get Model() {
-        return this.model;
+        if (object === undefined) {
+            throw new Error(`View: object not found for UUID "${this.objectUuid}"`);
+        }
+
+        this.updateFunc(object, model);
     }
 }
+
+// Viewはモデルに対するobjectへの操作を委託する。
