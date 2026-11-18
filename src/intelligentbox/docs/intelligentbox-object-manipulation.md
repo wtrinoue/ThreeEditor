@@ -261,6 +261,38 @@ transformControls.addEventListener( 'mouseUp', function () {
 
 `SetPositionCommand`は変更前後の位置を保持します。Historyは実行したCommandをUndo/Redo用に管理します。TransformControlsがドラッグ中に座標を直接更新する一方、ドラッグ終了時にCommandとして履歴へ登録する流れです。
 
+### モードとコマンドの対応
+
+TransformControlsのモードは、ドラッグ中にどの変換を行うかを決めます。移動モードでは位置、回転モードでは回転、拡大縮小モードではスケールが主に変更されます。さらに、選択した軸やハンドルによって操作できる方向・軸も制限されます。
+
+一方、`Viewport.js`の履歴記録処理はモード名を見てコマンドを選んでいるわけではありません。ドラッグ開始時に保存した値と、ドラッグ終了時の値をプロパティごとに比較し、実際に変化した値に対応するコマンドを作ります。
+
+```javascript
+if ( ! state.position.equals( object.position ) ) {
+	commands.push( new SetPositionCommand( editor, object, object.position, state.position ) );
+}
+
+if ( ! state.rotation.equals( object.rotation ) ) {
+	commands.push( new SetRotationCommand( editor, object, object.rotation, state.rotation ) );
+}
+
+if ( ! state.scale.equals( object.scale ) ) {
+	commands.push( new SetScaleCommand( editor, object, object.scale, state.scale ) );
+}
+```
+
+対応関係は次のとおりです。
+
+| 変化したプロパティ | 作成するコマンド |
+| --- | --- |
+| `object.position` | `SetPositionCommand` |
+| `object.rotation` | `SetRotationCommand` |
+| `object.scale` | `SetScaleCommand` |
+
+したがって、モードを切り替えただけで値が変化しなければコマンドは作られません。複数の値が変化したときは各コマンドを`MultiCmdsCommand`にまとめ、変更がなければ履歴への登録は行いません。ドラッグ中に何度もコマンドを登録するのではなく、ドラッグ終了時に一連の操作を記録するため、基本的にドラッグ1回がUndoの単位になります。
+
+回転操作ではTransformControlsが内部的に`quaternion`を更新します。Three.jsの`Object3D`は`quaternion`と`rotation`を同期しているため、Viewport側では`object.rotation`を比較し、`SetRotationCommand`を作成します。
+
 ## IntelligentBoxとの連携で注意する点
 
 - `objectChanged`は変更後に発行される通知です。変更の種類や入力内容までは引数に含まれず、変更されたObject3Dが渡されます。
