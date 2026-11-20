@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    // 出力する JavaScript の文法とモジュール形式（ブラウザの ES モジュールとして読み込む）
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": [ "ES2022", "DOM", "DOM.Iterable" ],
+
+    // このリポジトリ自身の package.json の名前が "three" のため、そのままだと
+    // 'three' が型のない build/three.module.js に解決されてしまう。型は @types/three を使う。
+    // （型チェック用の設定で、出力される JS の import 'three' は変わらない）
+    "paths": {
+      "three": [ "../../node_modules/@types/three" ]
+    },
+
+    // 入力は ts/、出力は js/（フォルダ構成はそのまま再現される）
+    "rootDir": "./ts",
+    "outDir": "./js",
+
+    // フィールド宣言（例: values: Record<string, unknown>;）を JS に出力しない。
+    // コンストラクタで代入する元の JS と同じ形のコードにするため。
+    "useDefineForClassFields": false,
+
+    "strict": true,
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": [ "ts/**/*" ]
+}

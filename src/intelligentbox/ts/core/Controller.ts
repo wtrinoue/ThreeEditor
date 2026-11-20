@@ -1,5 +1,14 @@
+import type { Object3D } from 'three';
+import type { Editor } from '../types/editor.js';
+import type { Model } from './Model.js';
+
 class Controller {
-    constructor(editor, model, objectUuid, onChanged = (object, model) => { }) {
+    editor: Editor;
+    model: Model;
+    objectUuid: string;
+    onChanged: (object: Object3D, model: Model) => void;
+
+    constructor(editor: Editor, model: Model, objectUuid: string, onChanged: (object: Object3D, model: Model) => void = (object, model) => { }) {
         if (new.target === Controller) {
             throw new Error('Controller must be subclassed');
         }
@@ -12,20 +21,22 @@ class Controller {
         this.initialize(this.editor, this.model, this.objectUuid);
     }
 
-    dispose() {
+    dispose(): void {
         this.editor.signals.objectChanged.remove(this.onObjectChanged);
     }
 
-    onObjectChanged(object) {
+    onObjectChanged(object: Object3D): void {
         if (object.uuid !== this.objectUuid) return;
         this.onChanged(object, this.model);
     }
 
-    initialize(editor, model, objectUuid) {
+    initialize(editor: Editor, model: Model, objectUuid: string): void {
         this.onObjectChanged = this.onObjectChanged.bind(this);
         editor.signals.objectChanged.add(this.onObjectChanged);
     }
 }
+
+export { Controller };
 
 // 今回のControllerは、ThreeEditorを前提とした作りにする。
 // editorのSignalを用いたやり方をする。

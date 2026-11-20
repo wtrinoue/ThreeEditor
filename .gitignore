@@ -22,3 +22,6 @@ test/treeshake/index.webgpu.tsl.bundle.min.js
 test/unit/build
 
 **/node_modules
+
+# IntelligentBox: tsc の出力（src/intelligentbox/ts から生成）
+src/intelligentbox/js/
