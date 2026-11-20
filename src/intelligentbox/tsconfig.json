@@ -10,7 +10,8 @@
     // 'three' が型のない build/three.module.js に解決されてしまう。型は @types/three を使う。
     // （型チェック用の設定で、出力される JS の import 'three' は変わらない）
     "paths": {
-      "three": [ "../../node_modules/@types/three" ]
+      "three": [ "../../node_modules/@types/three" ],
+      "three/addons/*": [ "../../node_modules/@types/three/examples/jsm/*" ]
     },
 
     // 入力は ts/、出力は js/（フォルダ構成はそのまま再現される）

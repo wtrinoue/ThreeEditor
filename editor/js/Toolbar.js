@@ -50,6 +50,23 @@ function Toolbar( editor ) {
 	} );
 	container.add( scale );
 
+	// IntelligentBox: 特別に追加した部分（IB モードのボタン）ここから
+
+	const intelligentBoxIcon = document.createElement( 'img' );
+	intelligentBoxIcon.title = 'IntelligentBox';
+	intelligentBoxIcon.src = 'images/ib.svg';
+
+	const intelligentBox = new UIButton();
+	intelligentBox.dom.appendChild( intelligentBoxIcon );
+	intelligentBox.onClick( function () {
+
+		signals.transformModeChanged.dispatch( 'intelligentbox' ); // ModelTransformControls の MODEL_MODE と同じ文字列
+
+	} );
+	container.add( intelligentBox );
+
+	// IntelligentBox: 特別に追加した部分 ここまで
+
 	//
 
 	signals.transformModeChanged.add( function ( mode ) {
@@ -57,12 +74,14 @@ function Toolbar( editor ) {
 		translate.dom.classList.remove( 'selected' );
 		rotate.dom.classList.remove( 'selected' );
 		scale.dom.classList.remove( 'selected' );
+		intelligentBox.dom.classList.remove( 'selected' ); // IntelligentBox: 特別に追加した部分
 
 		switch ( mode ) {
 
 			case 'translate': translate.dom.classList.add( 'selected' ); break;
 			case 'rotate': rotate.dom.classList.add( 'selected' ); break;
 			case 'scale': scale.dom.classList.add( 'selected' ); break;
+			case 'intelligentbox': intelligentBox.dom.classList.add( 'selected' ); break; // IntelligentBox: 特別に追加した部分
 
 		}
 

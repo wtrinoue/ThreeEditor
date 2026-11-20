@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { PMREMGenerator } from 'three/webgpu';
 
-import { TransformControls } from 'three/addons/controls/TransformControls.js';
+import { TransformControls } from 'three/addons/controls/TransformControls.js'; // eslint-disable-line no-unused-vars -- IntelligentBox: ModelTransformControls に差し替えたため未使用だが残しておく
+import { ModelTransformControls } from '../../src/intelligentbox/js/controls/ModelTransformControls.js'; // IntelligentBox: 特別に追加した部分
 
 import { UIPanel } from './libs/ui.js';
 
@@ -75,7 +76,8 @@ function Viewport( editor ) {
 
 	let objectStatesOnDown = [];
 
-	const transformControls = new TransformControls( camera );
+	// const transformControls = new TransformControls( camera ); // IntelligentBox: 元のコード（ModelTransformControls に差し替えたためコメント化）
+	const transformControls = new ModelTransformControls( camera ); // IntelligentBox: 特別に追加した部分
 	transformControls.addEventListener( 'axis-changed', function () {
 
 		if ( editor.viewportShading !== 'realistic' ) render();
