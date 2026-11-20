@@ -1,6 +1,6 @@
-function Strings( config ) {
+function Strings(config) {
 
-	const language = config.getKey( 'language' );
+	const language = config.getKey('language');
 
 	const values = {
 		fa: {
@@ -565,6 +565,9 @@ function Strings( config ) {
 			'menubar/help/about': 'About',
 			'menubar/help/manual': 'Manual',
 
+			'menubar/IB': 'IB',
+			'menubar/IB/box': 'Box',
+
 			'sidebar/animations': 'Animations',
 			'sidebar/animations/play': 'Play',
 			'sidebar/animations/stop': 'Stop',
@@ -1018,6 +1021,9 @@ function Strings( config ) {
 			'menubar/help/icons': 'Icon Pack',
 			'menubar/help/about': 'A propos',
 			'menubar/help/manual': 'Manual',
+
+			'menubar/IB': 'IB',
+			'menubar/IB/box': 'Box',
 
 			'sidebar/animations': 'Animations',
 			'sidebar/animations/play': 'Play',
@@ -1923,6 +1929,9 @@ function Strings( config ) {
 			'menubar/help/about': 'Three.js について',
 			'menubar/help/manual': 'マニュアル',
 
+			'menubar/IB': 'IB',
+			'menubar/IB/box': 'Box',
+
 			'sidebar/animations': 'アニメーション',
 			'sidebar/animations/play': '再生',
 			'sidebar/animations/stop': '停止',
@@ -2716,9 +2725,9 @@ function Strings( config ) {
 
 	return {
 
-		getKey: function ( key ) {
+		getKey: function (key) {
 
-			return values[ language ][ key ] || '???';
+			return values[language][key] || '???';
 
 		}
 

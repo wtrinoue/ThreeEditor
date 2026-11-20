@@ -8,19 +8,23 @@ import { MenubarRender } from './Menubar.Render.js';
 import { MenubarHelp } from './Menubar.Help.js';
 import { MenubarStatus } from './Menubar.Status.js';
 
-function Menubar( editor ) {
+import { MenubarIB } from './Menubar.IB.js';
+
+function Menubar(editor) {
 
 	const container = new UIPanel();
-	container.setId( 'menubar' );
+	container.setId('menubar');
 
-	container.add( new MenubarFile( editor ) );
-	container.add( new MenubarEdit( editor ) );
-	container.add( new MenubarAdd( editor ) );
-	container.add( new MenubarView( editor ) );
-	container.add( new MenubarRender( editor ) );
-	container.add( new MenubarHelp( editor ) );
+	container.add(new MenubarFile(editor));
+	container.add(new MenubarEdit(editor));
+	container.add(new MenubarAdd(editor));
+	container.add(new MenubarView(editor));
+	container.add(new MenubarRender(editor));
+	container.add(new MenubarHelp(editor));
 
-	container.add( new MenubarStatus( editor ) );
+	container.add(new MenubarStatus(editor));
+
+	container.add(new MenubarIB(editor));
 
 	return container;
 
