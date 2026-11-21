@@ -1,16 +1,10 @@
 import type { Slot } from './Slot.js';
-
-// Model が表示更新を依頼する相手（View など update(model) を持つもの）
-interface ModelView {
-    update?: (model: Model) => void;
-}
-
-type SlotMap = Record<string, Slot>;
+import type { View } from './View.js';
 
 class Model {
     values: Record<string, unknown>;
-    slots: SlotMap;
-    view: ModelView | null;
+    slots: Record<string, Slot>;
+    view: View | null;
 
     isConnect: boolean;
     parentModel: Model | null;
@@ -28,7 +22,7 @@ class Model {
     declare gimmeListener: (() => void) | null;
     declare disconnectListener: (() => void) | null;
 
-    constructor(values: Record<string, unknown> = {}, initialSlots: SlotMap = {}, view: ModelView | null = null) {
+    constructor(values: Record<string, unknown> = {}, initialSlots: Record<string, Slot> = {}, view: View | null = null) {
         if (!this.isSlotMap(initialSlots)) {
             throw new TypeError('initialSlots must be an object containing Slot instances');
         }
@@ -68,7 +62,7 @@ class Model {
 
     }
 
-    isSlotMap(initialSlots: unknown): initialSlots is SlotMap {
+    isSlotMap(initialSlots: unknown): initialSlots is Record<string, Slot> {
         if (initialSlots === null || typeof initialSlots !== 'object' || Array.isArray(initialSlots)) {
             return false;
         }
@@ -182,6 +176,5 @@ class Model {
 }
 
 export { Model };
-export type { ModelView, SlotMap };
 
 // モデルに対する親は一つだけなのでそれを利用して情報を載せたい。

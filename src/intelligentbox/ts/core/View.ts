@@ -2,14 +2,16 @@ import type { Object3D } from 'three';
 import type { Model } from './Model.js';
 
 class View {
+    object: Object3D;
     updateFunc: (object: Object3D, model: Model) => void;
 
-    constructor(updateFunc: (object: Object3D, model: Model) => void = (object, model) => { }) {
+    constructor(object: Object3D, updateFunc: (object: Object3D, model: Model) => void = (object, model) => { }) {
+        this.object = object;
         this.updateFunc = updateFunc;
     }
 
-    update(object: Object3D, model: Model): void {
-        this.updateFunc(object, model);
+    update(model: Model): void {
+        this.updateFunc(this.object, model);
     }
 }
 
