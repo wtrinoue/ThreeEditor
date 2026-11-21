@@ -1,39 +1,33 @@
-import type { Object3D } from 'three';
-import type { Editor } from '../types/editor.js';
 import type { Model } from './Model.js';
+import type { DragState } from '../controls/ModelTransformControls.js';
 
 class Controller {
-    editor: Editor;
-    model: Model;
-    objectUuid: string;
-    onChanged: (object: Object3D, model: Model) => void;
+    pointerDownFunc: (dragState: DragState, model: Model) => void;
+    pointerMoveFunc: (dragState: DragState, model: Model) => void;
+    pointerUpFunc: (dragState: DragState, model: Model) => void;
 
-    constructor(editor: Editor, model: Model, objectUuid: string, onChanged: (object: Object3D, model: Model) => void = (object, model) => { }) {
-        if (new.target === Controller) {
-            throw new Error('Controller must be subclassed');
-        }
-
-        this.editor = editor;
-        this.model = model;// Viewに保持しているモデルを参照する
-        this.objectUuid = objectUuid;// 変更対称のオブジェクト識別用
-        this.onChanged = onChanged;// objectの変更に対するmodelの変更を記述
-
-        this.initialize(this.editor, this.model, this.objectUuid);
+    constructor(
+        pointerDownFunc: (dragState: DragState, model: Model) => void,
+        pointerMoveFunc: (dragState: DragState, model: Model) => void,
+        pointerUpFunc: (dragState: DragState, model: Model) => void,
+    ) {
+        this.pointerDownFunc = pointerDownFunc;
+        this.pointerMoveFunc = pointerMoveFunc;
+        this.pointerUpFunc = pointerUpFunc;
     }
 
-    dispose(): void {
-        this.editor.signals.objectChanged.remove(this.onObjectChanged);
+    pointerDown(dragState: DragState, model: Model) {
+        this.pointerDownFunc(dragState, model);
     }
 
-    onObjectChanged(object: Object3D): void {
-        if (object.uuid !== this.objectUuid) return;
-        this.onChanged(object, this.model);
+    pointerMove(dragState: DragState, model: Model) {
+        this.pointerMoveFunc(dragState, model);
     }
 
-    initialize(editor: Editor, model: Model, objectUuid: string): void {
-        this.onObjectChanged = this.onObjectChanged.bind(this);
-        editor.signals.objectChanged.add(this.onObjectChanged);
+    pointerUp(dragState: DragState, model: Model) {
+        this.pointerUpFunc(dragState, model);
     }
+
 }
 
 export { Controller };

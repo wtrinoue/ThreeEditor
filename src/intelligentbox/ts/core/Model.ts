@@ -34,9 +34,6 @@ class Model {
         }
         this.values = { ...values };
         this.slots = { ...initialSlots };
-        for (const slotName of this.slotKeys) {
-            this.injectModelToSlot(this.slots[slotName]);
-        }
         this.view = view;
 
         // 接続情報（直上の親は常に1つ）
@@ -84,10 +81,6 @@ class Model {
         );
     }
 
-    injectModelToSlot(slot: Slot): void {
-        slot.setModel(this);
-    }
-
     getValue(valueName: string): unknown {
         return this.values[valueName];
     }
@@ -112,11 +105,11 @@ class Model {
     }
 
     getSlotValue(slotname: string): unknown {
-        return this.slots[slotname].get();
+        return this.slots[slotname].get(this);
     }
 
     setSlotValue(slotname: string, value: unknown): void {
-        this.slots[slotname].set(value);
+        this.slots[slotname].set(this, value);
     }
 
     disconnect(parentModel: Model | null = this.parentModel): void {

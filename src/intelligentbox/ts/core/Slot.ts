@@ -3,24 +3,21 @@ import type { Model } from './Model.js';
 class Slot<T = any> {
     setter: (value: T, model: Model | null) => void;
     getter: (model: Model | null) => T;
-    model: Model | null;
 
-    constructor(setter: (value: T, model: Model | null) => void = (value, model) => { }, getter: (model: Model | null) => T = ((model) => { }) as (model: Model | null) => T) {
+    constructor(
+        setter: (value: T, model: Model | null) => void = (value, model) => { },
+        getter: (model: Model | null) => T = ((model) => { }) as (model: Model | null) => T) {
         this.setter = setter;
         this.getter = getter;
-        this.model = null;
     }
 
-    setModel(model: Model): void {
-        this.model = model;
+
+    set(model: Model, value: T): void {
+        this.setter(value, model);
     }
 
-    set(value: T): void {
-        this.setter(value, this.model);
-    }
-
-    get(): T {
-        return this.getter(this.model);
+    get(model: Model): T {
+        return this.getter(model);
     }
 
 }
