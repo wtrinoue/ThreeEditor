@@ -16,6 +16,7 @@ const SURFACE_AXIS = 'SURFACE';
 
 const _offset = new Vector3();
 const _normalMatrix = new Matrix3();
+const _inverseQuaternion = new Quaternion();
 
 /**
  * ドラッグ中の値をまとめたもの（Controller から import して読むためのもの）。
@@ -33,8 +34,10 @@ interface DragState {
 
     readonly hitPoint: Readonly<Vector3>;       // つかんだ点（ワールド座標）
     readonly hitNormal: Readonly<Vector3>;      // つかんだ面の向き（ワールド座標、長さ 1）
+    readonly localHitPoint: Readonly<Vector3>;  // つかんだ点（ドラッグ開始時の object から見たローカル座標）
 
     readonly delta: Readonly<Vector3>;          // 3D でのドラッグ量（ワールド座標、開始時からの合計）
+    readonly localDelta: Readonly<Vector3>;     // delta をドラッグ開始時の object の向きで見たもの（向きだけ戻す。大きさは戻さない）
     readonly screenDelta: Readonly<Vector2>;    // 画面上のドラッグ量（-1〜1 の座標の差、上が +y。VR の操作では 0 のまま）
 
     readonly positionStart: Readonly<Vector3>;          // 開始時のローカルの位置
@@ -304,7 +307,9 @@ class ModelTransformControls extends TransformControls {
                 camera: this.camera,
                 hitPoint: new Vector3(),
                 hitNormal: new Vector3(),
+                localHitPoint: new Vector3(),
                 delta: new Vector3(),
+                localDelta: new Vector3(),
                 screenDelta: new Vector2(),
                 positionStart: new Vector3(),
                 quaternionStart: new Quaternion(),
@@ -322,7 +327,11 @@ class ModelTransformControls extends TransformControls {
         state.camera = this.camera;
         state.hitPoint.copy(this.hitPoint);
         state.hitNormal.copy(this.hitNormal);
+        // 元の pointerDown が object.updateMatrixWorld() を呼んだあとなので、matrixWorld はドラッグ開始時のもの
+        state.localHitPoint.copy(this.hitPoint);
+        this.object!.worldToLocal(state.localHitPoint);
         state.delta.set(0, 0, 0);
+        state.localDelta.set(0, 0, 0);
         state.screenDelta.set(0, 0);
         state.positionStart.copy((this as any)._positionStart);
         state.quaternionStart.copy((this as any)._quaternionStart);
@@ -344,6 +353,11 @@ class ModelTransformControls extends TransformControls {
         if (state === null || this.dragState === null) return;
 
         state.delta.copy(this.pointEnd).sub(this.pointStart);
+
+        // ドラッグ中は object が動くので、今の向きではなくドラッグ開始時の向きで戻す
+        _inverseQuaternion.copy(state.worldQuaternionStart).invert();
+        state.localDelta.copy(state.delta).applyQuaternion(_inverseQuaternion);
+
         if (pointer !== null) state.screenDelta.set(pointer.x, pointer.y).sub(this._screenStart);
 
     }
